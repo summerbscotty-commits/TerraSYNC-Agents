@@ -1,0 +1,177 @@
+# CLAUDE.md — TerraSYNC Social Media Team
+
+## Project Overview
+This folder contains TerraSYNC's social media marketing system. TerraSYNC is
+the premier integrator of autonomous robotic grounds maintenance, managing
+10,000+ acres across 50+ properties with 200+ robotic units. The company's
+proprietary VELOCITY platform serves as a unified command center for robotic
+mowers, line painters, range pickers, drones, and soil sensors.
+
+This system is designed to be used with Claude Code to generate platform-
+specific social media content at scale while maintaining a consistent brand
+voice across LinkedIn (B2B), Instagram (visual storytelling), TikTok (brand
+awareness), and Facebook (community engagement).
+
+## Folder Structure
+```
+TerraSync_Social_Team/
+├── CLAUDE.md                          ← You are here (navigation + instructions)
+├── terrasync_brand_context.txt        ← Brand identity, audiences, pricing,
+│                                        technology ecosystem, case studies,
+│                                        competitive landscape, PR objectives
+├── style_and_tone_guide.txt           ← Voice principles, tone by platform,
+│                                        proven post formats, visual identity,
+│                                        approved/banned language, ad copy rules
+└── skills/
+    │
+    │── FUNCTIONAL SKILLS (task-specific tools)
+    ├── platform-strategist/
+    │   └── SKILL.md                   ← Trending topic analysis + platform adaptation
+    ├── copywriter/
+    │   └── SKILL.md                   ← Caption and script writing by platform
+    ├── creative-director/
+    │   └── SKILL.md                   ← Visual concepts, prompts, and brand alignment
+    │
+    │── AGENT TEAM: "THE LEGENDARY CAST" (persona-driven pipeline)
+    ├── ted-mosby-chief-of-staff/
+    │   └── SKILL.md                   ← Orchestrator — builds the Master Social
+    │                                     Architecture Plan and runs the agent pipeline
+    ├── barney-stinson-content-creator/
+    │   └── SKILL.md                   ← Hype man — writes all copy with energy and
+    │                                     platform-specific hooks
+    ├── robin-scherbatsky-brand-guardian/
+    │   └── SKILL.md                   ← Ruthless critic — enforces style guide, kills
+    │                                     AI slop, checks capitalization, validates tone
+    └── marshall-eriksen-compliance/
+        └── SKILL.md                   ← Eco-checker — verifies claims, fact-checks
+                                         stats, ensures legal safety and B2C heart
+```
+
+## Two Ways to Use This System
+
+### Option 1: Functional Skills (Direct Tools)
+Use the Platform Strategist, Copywriter, and Creative Director individually
+or combined via the Team Lead prompt. Best for quick tasks and one-off posts.
+
+### Option 2: The Legendary Agent Team (Full Pipeline)
+Activate Ted Mosby to run the complete pipeline: Ted architects the plan →
+Barney writes the copy → Robin reviews for brand/voice → Marshall checks
+compliance and heart → Ted delivers the final package. Best for campaigns,
+launches, and multi-platform rollouts.
+
+To activate the agent team, use:
+"Ted, suit up. [Describe the campaign or content need.]"
+
+## How to Use This System
+
+### Quick Start
+1. Open this folder in Claude Code
+2. For full campaigns: activate Ted ("Ted, suit up...")
+3. For quick tasks: use functional skills directly
+4. For one-off posts: reference Barney directly (but always send through Robin)
+
+### Agent Team Launch Prompt (Copy-Paste Ready)
+```
+Ted, suit up. We are officially executing [describe the campaign].
+
+Activate the Agent Team (Barney, Robin, Marshall) to execute the full
+pipeline:
+
+1. Draft [specific content needs — e.g., "the LinkedIn beta launch
+   announcement for Sunday morning"].
+2. Map out [calendar scope — e.g., "a 3-week content calendar focusing
+   on VELOCITY feature reveals"].
+3. Enforce the CLAUDE.md rule: anchor all visuals to physical robotics
+   on real turf.
+4. Ensure "TerraSYNC" capitalization is correct throughout.
+
+Show me the agent interaction (Robin critiquing Barney, Marshall checking
+the facts) and then present the final approved content.
+```
+
+### Functional Team Lead Prompt (Copy-Paste Ready)
+```
+We are launching a new campaign for TerraSYNC: [describe the campaign].
+
+Act as the Team Lead and use the Platform Strategist, Copywriter, and
+Creative Director skills to develop a cohesive social media rollout. I need:
+
+- 2 TikTok video scripts with viral visual hooks
+- 3 Instagram posts (mix of carousel ideas and Reels concepts) with captions
+- 2 Facebook posts optimized for community discussion
+- 2 LinkedIn thought-leadership posts tailored for a B2B audience
+
+Ensure the brand voice remains consistent across platforms and save the
+final deliverables into a new folder called TerraSync_Campaign_Launch.
+```
+
+### Individual Agent Prompts
+- **Ted (orchestration)**: "Ted, suit up. I need a content plan for
+  [campaign]. Build the architecture and activate the team."
+- **Barney (quick draft)**: "Barney, write me [number] [platform] posts
+  about [topic]. Make them legendary."
+- **Robin (review)**: "Robin, review this draft: [paste content]"
+- **Marshall (fact-check)**: "Marshall, check the claims in this post:
+  [paste content]"
+- **Platform Strategist**: "Use the Platform Strategist skill to analyze
+  trending topics in [topic] for [platform]."
+- **Copywriter**: "Use the Copywriter skill to write [number] posts
+  for [platform] about [topic]."
+- **Creative Director**: "Use the Creative Director skill to develop
+  visual concepts for [campaign] across [platforms]."
+
+## Key Rules
+1. ALWAYS read `terrasync_brand_context.txt` and `style_and_tone_guide.txt`
+   before generating any content. These files are the source of truth.
+2. NEVER use the same tone for LinkedIn and TikTok. LinkedIn is professional,
+   data-driven B2B thought leadership. TikTok is energetic, trend-savvy
+   educational-entertainment. They share a brand but not a voice.
+3. ALWAYS reference the proven post formats in the style guide ("Satisfying
+   Mows," "Superintendent Spotlight," PAS video, before/after, founder
+   walking video) as calibration benchmarks — not templates to copy.
+4. When in doubt about voice, default to "confident and grounded" — not
+   "excited and salesy." TerraSYNC earns confidence through data and case
+   studies, not adjectives.
+5. ALWAYS anchor visuals in physical robotics on real turf. The brand
+   disambiguation challenge (Trimble TerraSync, TerraMaster) means every
+   piece of content must immediately signal "autonomous landscaping" — not
+   software.
+6. Save all campaign output into clearly named folders with the date.
+7. The VELOCITY platform launch is the current top priority. All content
+   should ladder up to this objective when possible.
+
+## Context File Descriptions
+- **terrasync_brand_context.txt**: Contains the company description, founder
+  story, value propositions, SYNC Plan and MaintainME pricing tiers,
+  technology ecosystem (Nexmow, Husqvarna, Kress, Korechi, TinyMobileRobots,
+  VELOCITY), target audience breakdowns by platform, PR objectives, key
+  messages, anchor case studies (UT Gardens, Restored Church of God, McGhee
+  Tyson Airport), competitive landscape, and brand disambiguation notes.
+  Read this to understand WHAT to say.
+
+- **style_and_tone_guide.txt**: Contains voice principles (lead with
+  specificity, show data / tell story, urgent without alarmist, earned
+  confidence, authentically technical), platform-specific tone adjustments,
+  approved/banned language, emoji rules, proven post formats with annotations,
+  visual identity guidelines (color palette, photography rules, design style),
+  formatting standards, and Meta ad copy rules. Read this to understand
+  HOW to say it.
+
+## Proven Content Hooks (Quick Reference)
+These hook patterns have the highest performance for B2B grounds management:
+1. The Stat Hook: "Commercial mowing costs $75/acre. Our robots do it for $33."
+2. The Problem-Agitation Hook: "Your crew called out again. The grass is
+   6 inches tall. The board meeting is tomorrow."
+3. The Question Hook: "Still paying a full crew to mow grounds that could
+   maintain themselves?"
+4. The Visual Contrast Hook: Quick cut from loud gas mower crew to silent
+   robot on pristine turf.
+5. The Curiosity Gap Hook: "The #1 reason facility directors are canceling
+   their landscaping contracts in 2026..."
+
+## Social Accounts
+- LinkedIn: linkedin.com/company/terrasync.biz
+- Instagram: instagram.com/terrasync_/
+- Facebook: facebook.com (search: TerraSYNC)
+- TikTok: tiktok.com/@terrasync
+- Website: terrasync.biz
