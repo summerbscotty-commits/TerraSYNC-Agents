@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TerraSYNC Weekly Content Dashboard — April 6–12, 2026</title>
+  <style>
+    :root {
+      --ts-green:   #2D6A4F;
+      --ts-lime:    #52B788;
+      --ts-light:   #D8F3DC;
+      --ts-dark:    #1B2D27;
+      --ts-gold:    #C8A84B;
+      --ts-cream:   #F8F4EE;
+      --ts-gray:    #6B7280;
+      --ts-border:  #D1D5DB;
+      --linkedin:   #0A66C2;
+      --instagram:  #C13584;
+      --facebook:   #1877F2;
+      --approved:   #059669;
+      --flag:       #D97706;
+      --font-main: 'Georgia', serif;
+      --font-ui:   'system-ui', -apple-system, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-ui);
+      background: var(--ts-cream);
+      color: var(--ts-dark);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--ts-dark);
+      color: white;
+      padding: 32px 48px 24px;
+      border-bottom: 4px solid var(--ts-lime);
+    }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand-mark {
+      display: flex;
+      flex-direction: column;
+    }
+    .brand-mark .logo-text {
+      font-family: var(--font-main);
+      font-size: 26px;
+      font-weight: bold;
+      color: var(--ts-lime);
+      letter-spacing: 1px;
+    }
+    .brand-mark .tagline {
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .header-meta {
+      text-align: right;
+    }
+    .header-meta .week-label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+    .header-meta .week-range {
+      font-size: 20px;
+      font-weight: 600;
+      color: white;
+      margin-top: 2px;
+    }
+    .campaign-banner {
+      margin-top: 20px;
+      padding: 14px 20px;
+      background: rgba(82,183,136,0.15);
+      border-left: 4px solid var(--ts-lime);
+      border-radius: 4px;
+    }
+    .campaign-banner .campaign-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ts-lime);
+    }
+    .campaign-banner .campaign-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      margin-top: 3px;
+    }
+
+    /* ── LAYOUT ── */
+    .main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 36px 48px 64px;
+    }
+
+    /* ── SECTION HEADER ── */
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--ts-gray);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--ts-border);
+    }
+
+    /* ── STATS ROW ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .stat-card {
+      background: white;
+      border: 1px solid var(--ts-border);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+    .stat-card .stat-number {
+      font-size: 34px;
+      font-weight: 700;
+      color: var(--ts-green);
+      line-height: 1;
+    }
+    .stat-card .stat-label {
+      font-size: 12px;
+      color: var(--ts-gray);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 6px;
+    }
+    .stat-card.highlight {
+      background: var(--ts-green);
+    }
+    .stat-card.highlight .stat-number,
+    .stat-card.highlight .stat-label {
+      color: white;
+    }
+    .stat-card.highlight .stat-label {
+      color: rgba(255,255,255,0.75);
+    }
+
+    /* ── AGENT REPORT STRIP ── */
+    .agent-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .agent-card {
+      background: white;
+      border: 1px solid var(--ts-border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .agent-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--ts-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .agent-info .agent-name {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--ts-dark);
+    }
+    .agent-info .agent-role {
+      font-size: 11px;
+      color: var(--ts-gray);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .agent-info .agent-note {
+      font-size: 12px;
+      color: var(--ts-dark);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+    .agent-badge {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-green { background: #D1FAE5; color: #065F46; }
+    .badge-gold  { background: #FEF3C7; color: #92400E; }
+
+    /* ── CALENDAR ── */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .cal-day {
+      background: white;
+      border: 1px solid var(--ts-border);
+      border-radius: 10px;
+      overflow: hidden;
+      min-height: 160px;
+    }
+    .cal-day-header {
+      background: var(--ts-green);
+      color: white;
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cal-day-header .day-name { text-transform: uppercase; letter-spacing: 1px; }
+    .cal-day-header .day-date { font-weight: 400; opacity: 0.8; }
+    .cal-day-body { padding: 10px; }
+    .cal-post {
+      margin-bottom: 8px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border-left: 3px solid;
+      background: #F9FAFB;
+    }
+    .cal-post.linkedin  { border-color: var(--linkedin);  }
+    .cal-post.instagram { border-color: var(--instagram); }
+    .cal-post.facebook  { border-color: var(--facebook);  }
+    .cal-post .post-platform {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 3px;
+    }
+    .cal-post.linkedin  .post-platform { color: var(--linkedin);  }
+    .cal-post.instagram .post-platform { color: var(--instagram); }
+    .cal-post.facebook  .post-platform { color: var(--facebook);  }
+    .cal-post .post-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ts-dark);
+      line-height: 1.35;
+    }
+    .cal-post .post-time {
+      font-size: 10px;
+      color: var(--ts-gray);
+      margin-top: 3px;
+    }
+    .cal-empty {
+      background: #F9FAFB;
+      border: 1.5px dashed #E5E7EB;
+    }
+    .cal-empty .cal-day-header {
+      background: #E5E7EB;
+      color: #9CA3AF;
+    }
+    .cal-empty .cal-day-body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px;
+    }
+    .cal-empty .empty-label {
+      font-size: 11px;
+      color: #D1D5DB;
+      text-align: center;
+    }
+
+    /* ── POST DETAIL CARDS ── */
+    .posts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 900px) { .posts-grid { grid-template-columns: 1fr; } }
+    .post-card {
+      background: white;
+      border: 1px solid var(--ts-border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .post-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--ts-border);
+    }
+    .platform-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .platform-pill.linkedin  { background: #DBEAFE; color: var(--linkedin);  }
+    .platform-pill.instagram { background: #FCE7F3; color: var(--instagram); }
+    .platform-pill.facebook  { background: #DBEAFE; color: var(--facebook);  }
+    .post-card-header .post-num {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ts-gray);
+      margin-left: auto;
+    }
+    .post-card-body { padding: 18px; }
+    .post-card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ts-dark);
+      margin-bottom: 8px;
+      font-family: var(--font-main);
+    }
+    .post-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .meta-chip {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      background: var(--ts-light);
+      color: var(--ts-green);
+      font-weight: 600;
+    }
+    .meta-chip.voice  { background: #FEF3C7; color: #92400E; }
+    .meta-chip.hook   { background: #EDE9FE; color: #5B21B6; }
+    .post-body-text {
+      font-size: 13px;
+      color: #374151;
+      line-height: 1.65;
+      white-space: pre-line;
+      border-left: 3px solid var(--ts-lime);
+      padding-left: 14px;
+      margin-bottom: 14px;
+    }
+    .post-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      border-top: 1px solid var(--ts-border);
+      background: #F9FAFB;
+    }
+    .post-date-time {
+      font-size: 12px;
+      color: var(--ts-gray);
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .status-approved { background: #D1FAE5; color: #065F46; }
+    .status-flag     { background: #FEF3C7; color: #92400E; }
+    .creative-note {
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: #F0FDF4;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #166534;
+    }
+    .creative-note strong { display: block; margin-bottom: 3px; }
+
+    /* ── PIPELINE STRIP ── */
+    .pipeline-row {
+      display: flex;
+      gap: 0;
+      background: white;
+      border: 1px solid var(--ts-border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+    .pipeline-stage {
+      flex: 1;
+      padding: 18px 16px;
+      border-right: 1px solid var(--ts-border);
+      text-align: center;
+    }
+    .pipeline-stage:last-child { border-right: none; }
+    .pipeline-stage .stage-icon { font-size: 24px; margin-bottom: 6px; }
+    .pipeline-stage .stage-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ts-dark);
+    }
+    .pipeline-stage .stage-result {
+      font-size: 11px;
+      color: var(--ts-gray);
+      margin-top: 4px;
+    }
+    .pipeline-stage .stage-stat {
+      margin-top: 8px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ts-green);
+    }
+    .pipeline-arrow {
+      display: flex;
+      align-items: center;
+      padding: 0 4px;
+      color: #D1D5DB;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    /* ── PRODUCTION FLAGS ── */
+    .flags-list { margin-bottom: 40px; }
+    .flag-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 14px 18px;
+      background: white;
+      border: 1px solid var(--ts-border);
+      border-left: 4px solid var(--ts-gold);
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .flag-item .flag-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .flag-item .flag-text { font-size: 13px; color: var(--ts-dark); line-height: 1.5; }
+    .flag-item .flag-text strong { color: var(--ts-gold); }
+
+    /* ── HIGHLIGHTS ── */
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .highlight-card {
+      background: white;
+      border: 1px solid var(--ts-border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .highlight-card .hl-quote {
+      font-family: var(--font-main);
+      font-size: 15px;
+      font-style: italic;
+      color: var(--ts-dark);
+      line-height: 1.6;
+      border-left: 3px solid var(--ts-lime);
+      padding-left: 14px;
+      margin-bottom: 10px;
+    }
+    .highlight-card .hl-source {
+      font-size: 12px;
+      color: var(--ts-gray);
+    }
+    .highlight-card .hl-reason {
+      font-size: 12px;
+      color: #4B5563;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    /* ── TED CLOSING ── */
+    .ted-closing {
+      background: var(--ts-dark);
+      color: white;
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 40px;
+    }
+    .ted-closing .ted-name {
+      font-size: 11px;
+      color: var(--ts-lime);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+    .ted-closing .ted-text {
+      font-family: var(--font-main);
+      font-size: 15px;
+      color: rgba(255,255,255,0.9);
+      line-height: 1.75;
+      font-style: italic;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 12px;
+      color: #9CA3AF;
+      border-top: 1px solid var(--ts-border);
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div class="brand-mark">
+      <span class="logo-text">TerraSYNC</span>
+      <span class="tagline">Autonomous Grounds Intelligence</span>
+    </div>
+    <div class="header-meta">
+      <div class="week-label">Weekly Content Dashboard</div>
+      <div class="week-range">April 6–12, 2026</div>
+    </div>
+  </div>
+  <div class="campaign-banner">
+    <div class="campaign-name">Spring Activation Week — "Spring Arrived. Are You Ready?"</div>
+    <div class="campaign-desc">9 posts · 3 platforms (LinkedIn, Instagram, Facebook) · 7-day narrative arc · Earth Day build · VELOCITY keystone</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- STATS -->
+  <div class="section-title">Campaign at a Glance</div>
+  <div class="stats-grid">
+    <div class="stat-card highlight">
+      <div class="stat-number">9</div>
+      <div class="stat-label">Approved Posts</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">3</div>
+      <div class="stat-label">LinkedIn</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">3</div>
+      <div class="stat-label">Instagram</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">3</div>
+      <div class="stat-label">Facebook</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">7</div>
+      <div class="stat-label">Days of Coverage</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">3</div>
+      <div class="stat-label">Agent Fixes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">0</div>
+      <div class="stat-label">Full Rewrites</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">Apr 22</div>
+      <div class="stat-label">Earth Day Target</div>
+    </div>
+  </div>
+
+  <!-- AGENT REPORTS -->
+  <div class="section-title">Agent Pipeline Summary</div>
+  <div class="agent-strip">
+
+    <div class="agent-card">
+      <div class="agent-avatar">🌸</div>
+      <div class="agent-info">
+        <div class="agent-name">Lily Aldrin</div>
+        <div class="agent-role">Trend Scout</div>
+        <div class="agent-note">Flagged spring hiring anxiety as the dominant emotional signal. Pushed for "spring felt like a crisis" as the human truth to lead with.</div>
+        <span class="agent-badge badge-green">5 trends identified</span>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-avatar">📊</div>
+      <div class="agent-info">
+        <div class="agent-name">Tracy McConnell</div>
+        <div class="agent-role">Competitor Intel</div>
+        <div class="agent-note">Identified 3 white spaces: soil health unoccupied, VELOCITY has no comparable, Earth Day will be generic from competitors.</div>
+        <span class="agent-badge badge-green">4 competitors mapped</span>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-avatar">✨</div>
+      <div class="agent-info">
+        <div class="agent-name">Patrice</div>
+        <div class="agent-role">Topic Multiplier</div>
+        <div class="agent-note">Expanded 5 signals into 9 executable post angles across 5 content clusters with platform-specific hooks and publish dates.</div>
+        <span class="agent-badge badge-green">9 angles built</span>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-avatar">🏛</div>
+      <div class="agent-info">
+        <div class="agent-name">Ted Mosby</div>
+        <div class="agent-role">Chief of Staff</div>
+        <div class="agent-note">Built Master Social Architecture Plan. Identified Post 6 (VELOCITY) as keystone. Established week narrative arc: awareness → ROI → differentiation.</div>
+        <span class="agent-badge badge-green">Architecture approved</span>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-avatar">🎯</div>
+      <div class="agent-info">
+        <div class="agent-name">Barney Stinson</div>
+        <div class="agent-role">Content Creator</div>
+        <div class="agent-note">7 of 9 clean on first pass. Personal best. Correctly used "up to 40%," "zero-emission robotic fleet," and avoided all banned words.</div>
+        <span class="agent-badge badge-gold">2 targeted revisions</span>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-avatar">📰</div>
+      <div class="agent-info">
+        <div class="agent-name">Robin Scherbatsky</div>
+        <div class="agent-role">Brand Guardian</div>
+        <div class="agent-note">Approved 7 of 9 on first review. Caught 1 hashtag overcount, 1 slide copy issue. Noted "Fed it." as hook of the week — off the record.</div>
+        <span class="agent-badge badge-gold">2 revisions required</span>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-avatar">⚖️</div>
+      <div class="agent-info">
+        <div class="agent-name">Marshall Eriksen</div>
+        <div class="agent-role">Compliance Lead</div>
+        <div class="agent-note">Corrected 1 unverified stat, 1 uncited industry rate, 1 legal language issue. Noted Post 8's eco-claim honesty as unprecedented. Emotional about Post 9.</div>
+        <span class="agent-badge badge-gold">3 corrections applied</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CALENDAR -->
+  <div class="section-title">7-Day Content Calendar</div>
+  <div class="calendar-grid">
+
+    <!-- MON -->
+    <div class="cal-day">
+      <div class="cal-day-header">
+        <span class="day-name">Mon</span>
+        <span class="day-date">Apr 6</span>
+      </div>
+      <div class="cal-day-body">
+        <div class="cal-post linkedin">
+          <div class="post-platform">LinkedIn</div>
+          <div class="post-title">The Spring Math Nobody Wants to Do</div>
+          <div class="post-time">7:30am EST</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TUE -->
+    <div class="cal-day">
+      <div class="cal-day-header">
+        <span class="day-name">Tue</span>
+        <span class="day-date">Apr 7</span>
+      </div>
+      <div class="cal-day-body">
+        <div class="cal-post facebook">
+          <div class="post-platform">Facebook</div>
+          <div class="post-title">April arrived. Did your crew?</div>
+          <div class="post-time">9:00am EST</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WED -->
+    <div class="cal-day">
+      <div class="cal-day-header">
+        <span class="day-name">Wed</span>
+        <span class="day-date">Apr 8</span>
+      </div>
+      <div class="cal-day-body">
+        <div class="cal-post linkedin">
+          <div class="post-platform">LinkedIn</div>
+          <div class="post-title">The ROI Question Every Facility Director Asks</div>
+          <div class="post-time">7:30am EST</div>
+        </div>
+        <div class="cal-post instagram">
+          <div class="post-platform">Instagram</div>
+          <div class="post-title">The Math Behind Our Earth Day (Carousel)</div>
+          <div class="post-time">12:00pm EST</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THU -->
+    <div class="cal-day">
+      <div class="cal-day-header">
+        <span class="day-name">Thu</span>
+        <span class="day-date">Apr 9</span>
+      </div>
+      <div class="cal-day-body">
+        <div class="cal-post facebook">
+          <div class="post-platform">Facebook</div>
+          <div class="post-title">Something Your Gas Mower Never Did for Your Turf</div>
+          <div class="post-time">10:00am EST</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FRI -->
+    <div class="cal-day" style="border: 2px solid var(--ts-lime);">
+      <div class="cal-day-header" style="background: var(--ts-lime); color: var(--ts-dark);">
+        <span class="day-name">Fri ⭐</span>
+        <span class="day-date">Apr 10</span>
+      </div>
+      <div class="cal-day-body">
+        <div class="cal-post linkedin">
+          <div class="post-platform">LinkedIn</div>
+          <div class="post-title">We Built a Command Center for 200+ Robots — VELOCITY</div>
+          <div class="post-time">7:30am EST · KEYSTONE</div>
+        </div>
+        <div class="cal-post instagram">
+          <div class="post-platform">Instagram</div>
+          <div class="post-title">Spring Mowing, No Crew Required (Reel)</div>
+          <div class="post-time">12:00pm EST</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SAT -->
+    <div class="cal-day">
+      <div class="cal-day-header">
+        <span class="day-name">Sat</span>
+        <span class="day-date">Apr 11</span>
+      </div>
+      <div class="cal-day-body">
+        <div class="cal-post facebook">
+          <div class="post-platform">Facebook</div>
+          <div class="post-title">What April 22 Actually Looks Like for Us</div>
+          <div class="post-time">10:00am EST</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUN -->
+    <div class="cal-day">
+      <div class="cal-day-header">
+        <span class="day-name">Sun</span>
+        <span class="day-date">Apr 12</span>
+      </div>
+      <div class="cal-day-body">
+        <div class="cal-post instagram">
+          <div class="post-platform">Instagram</div>
+          <div class="post-title">Your Neighbor Can Finally Sleep In</div>
+          <div class="post-time">10:00am EST</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PIPELINE SUMMARY -->
+  <div class="section-title">Agent Pipeline Results</div>
+  <div class="pipeline-row">
+    <div class="pipeline-stage">
+      <div class="stage-icon">🌸</div>
+      <div class="stage-name">Lily + Tracy</div>
+      <div class="stage-result">Trend + Competitor Research</div>
+      <div class="stage-stat">5</div>
+      <div class="stage-result">signals identified</div>
+    </div>
+    <div class="pipeline-stage">
+      <div class="stage-icon">✨</div>
+      <div class="stage-name">Patrice</div>
+      <div class="stage-result">Topic Multiplication</div>
+      <div class="stage-stat">9</div>
+      <div class="stage-result">angles built</div>
+    </div>
+    <div class="pipeline-stage">
+      <div class="stage-icon">🏛</div>
+      <div class="stage-name">Ted</div>
+      <div class="stage-result">Architecture</div>
+      <div class="stage-stat">✓</div>
+      <div class="stage-result">plan approved</div>
+    </div>
+    <div class="pipeline-stage">
+      <div class="stage-icon">🎯</div>
+      <div class="stage-name">Barney</div>
+      <div class="stage-result">First Drafts</div>
+      <div class="stage-stat">7/9</div>
+      <div class="stage-result">clean first pass</div>
+    </div>
+    <div class="pipeline-stage">
+      <div class="stage-icon">📰</div>
+      <div class="stage-name">Robin</div>
+      <div class="stage-result">Brand Review</div>
+      <div class="stage-stat">2</div>
+      <div class="stage-result">targeted revisions</div>
+    </div>
+    <div class="pipeline-stage">
+      <div class="stage-icon">⚖️</div>
+      <div class="stage-name">Marshall</div>
+      <div class="stage-result">Compliance</div>
+      <div class="stage-stat">3</div>
+      <div class="stage-result">corrections applied</div>
+    </div>
+    <div class="pipeline-stage" style="background: #F0FDF4;">
+      <div class="stage-icon">✅</div>
+      <div class="stage-name">Wesley</div>
+      <div class="stage-result">Ready to Schedule</div>
+      <div class="stage-stat">9</div>
+      <div class="stage-result">approved posts</div>
+    </div>
+  </div>
+
+  <!-- PRODUCTION FLAGS -->
+  <div class="section-title">Production Flags for Creative Team</div>
+  <div class="flags-list">
+    <div class="flag-item">
+      <div class="flag-icon">⚠️</div>
+      <div class="flag-text">
+        <strong>Post 7 (Instagram Reel) — Visual Timing:</strong>
+        Robot unit must appear within 2 seconds of the open. Do not hold on grass alone. Ambient sound only (birds, wind) — no music, no engine noise. The silence is the point.
+      </div>
+    </div>
+    <div class="flag-item">
+      <div class="flag-icon">⚠️</div>
+      <div class="flag-text">
+        <strong>Post 4 (Instagram Carousel) — Slide 2 Visual:</strong>
+        Charging station must be photographed outdoors with turf clearly visible in frame. Not an indoor product photo. Natural light required.
+      </div>
+    </div>
+    <div class="flag-item">
+      <div class="flag-icon">⚠️</div>
+      <div class="flag-text">
+        <strong>Post 9 (Instagram) — Location:</strong>
+        Must shoot at a residential-adjacent location, not a commercial campus or golf course. A home or porch must be visible in the background. A person reading/having coffee on the porch sells the story without words.
+      </div>
+    </div>
+    <div class="flag-item">
+      <div class="flag-icon">🗓️</div>
+      <div class="flag-text">
+        <strong>Post 8 (Facebook, Apr 11) — Production Dependency:</strong>
+        This post teases "We'll have more to share" for April 22. Earth Day content must be planned and ready before this post publishes on April 11. Flagged by both Robin and Marshall.
+      </div>
+    </div>
+  </div>
+
+  <!-- COPY HIGHLIGHTS -->
+  <div class="section-title">Lines Worth Remembering This Week</div>
+  <div class="highlights-grid">
+    <div class="highlight-card">
+      <div class="hl-quote">"Fed it."</div>
+      <div class="hl-source">Post 5 — Facebook · Hook line</div>
+      <div class="hl-reason">Robin called this "hook of the week." Two words. Its own line. Completely specific. Stops you cold on a Facebook scroll. That's what a hook does.</div>
+    </div>
+    <div class="highlight-card">
+      <div class="hl-quote">"That's not a feature. That's just consideration."</div>
+      <div class="hl-source">Post 9 — Instagram · Closing line</div>
+      <div class="hl-reason">Robin wants it on the website. Marshall wants it in the pitch deck. It positions TerraSYNC as a company that thought about the people near its clients — not just the clients themselves.</div>
+    </div>
+    <div class="highlight-card">
+      <div class="hl-quote">"And something always goes wrong at 10pm on a Tuesday."</div>
+      <div class="hl-source">Post 6 — LinkedIn · VELOCITY keystone</div>
+      <div class="hl-reason">Robin's AI smell test: "Nobody generating AI slop adds 'on a Tuesday.' That's lived experience." This detail makes the VELOCITY origin story credible.</div>
+    </div>
+    <div class="highlight-card">
+      <div class="hl-quote">"We're honest that 'zero-emission' refers to the robotic fleet, not our service trucks or offices."</div>
+      <div class="hl-source">Post 8 — Facebook · Earth Day</div>
+      <div class="hl-reason">Marshall: "This proactive honesty is unprecedented in branded sustainability content." It's more protective legally AND more trusted by sophisticated readers than a vague green claim.</div>
+    </div>
+    <div class="highlight-card">
+      <div class="hl-quote">"Spring shouldn't feel like a crisis you survived. It should feel like a season you planned for."</div>
+      <div class="hl-source">Post 1 — LinkedIn · Opening week anchor</div>
+      <div class="hl-reason">Lily's emotional signal ("spring arrived and the crews didn't") expressed in two sentences that are simultaneously empathetic and a brand promise. Sets the tone for the entire week.</div>
+    </div>
+    <div class="highlight-card">
+      <div class="hl-quote">"Not a pitch. An answer."</div>
+      <div class="hl-source">Post 3 — LinkedIn · ROI post CTA</div>
+      <div class="hl-reason">Reframes the assessment booking from a sales motion into a service offering. Four words that change how a facility director reads the CTA link below it.</div>
+    </div>
+  </div>
+
+  <!-- TED CLOSING -->
+  <div class="ted-closing">
+    <div class="ted-name">Ted Mosby — Chief of Staff · Closing Note</div>
+    <div class="ted-text">
+      "The architecture is complete. Lily and Tracy mapped the emotional terrain. Patrice built the matrix. I drew the blueprint. Barney wrote — and for the first time in recent memory, used 'up to 40%' correctly on the first draft, which I am choosing to interpret as a sign of professional growth rather than a fluke. Robin sharpened without breaking anything. Marshall kept every claim true and every eco-statement honest — and was genuinely moved by a caption about a neighbor sleeping in on a Saturday, which is somehow both surprising and completely on brand for Marshall.
+
+      Nine posts. Zero rewrites. Three platforms. One week. 'That's not a feature. That's just consideration.' lives in this package, and it might be the best line we've built yet.
+
+      The VELOCITY keystone goes Friday. The Earth Day build starts Saturday. Wesley — the floor is yours. This content is ready."
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    TerraSYNC Social Media Command · Spring Activation Week · April 6–12, 2026 · Generated by The Legendary Cast
+    <br>terrasync.biz · Book a property assessment: terrasync.biz/appointment/21
+  </div>
+
+</div>
+</body>
+</html>
