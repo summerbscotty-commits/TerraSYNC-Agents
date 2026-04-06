@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TerraSYNC — Team Chat</title>
+  <style>
+    :root {
+      --bg:        #0E1117;
+      --surface:   #161B22;
+      --surface2:  #21262D;
+      --border:    #30363D;
+      --text:      #E6EDF3;
+      --text-muted:#8B949E;
+      --green:     #2D6A4F;
+      --lime:      #52B788;
+      --user-bg:   #1F4E3D;
+      --user-text: #D8F3DC;
+      --input-bg:  #161B22;
+      --scrollbar: #30363D;
+      --sidebar-w: 240px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .sidebar-header {
+      padding: 20px 16px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--lime);
+      letter-spacing: 0.5px;
+    }
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .channel-label {
+      padding: 16px 16px 6px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+    }
+    .channel-item {
+      padding: 8px 16px;
+      font-size: 14px;
+      color: var(--text);
+      background: rgba(82, 183, 136, 0.12);
+      border-left: 2px solid var(--lime);
+      margin: 0 8px;
+      border-radius: 4px;
+    }
+    .channel-item span { color: var(--text-muted); margin-right: 4px; }
+
+    .agents-label {
+      padding: 16px 16px 8px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .agents-label .count {
+      font-size: 11px;
+      color: var(--lime);
+      font-weight: 600;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .agent-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 16px;
+      cursor: default;
+      transition: background 0.1s;
+      position: relative;
+    }
+    .agent-item:hover { background: rgba(255,255,255,0.04); }
+    .agent-item.typing { background: rgba(255,255,255,0.06); }
+
+    .agent-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .agent-avatar .status-dot {
+      position: absolute;
+      bottom: -1px;
+      right: -1px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #3FB950;
+      border: 2px solid var(--surface);
+    }
+    .agent-avatar .status-dot.idle {
+      background: #6E7681;
+    }
+    .agent-avatar .status-dot.typing-dot {
+      background: var(--lime);
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.85); }
+    }
+
+    .agent-info { flex: 1; min-width: 0; }
+    .agent-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .agent-role {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+    }
+    .api-key-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .api-key-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+    }
+    .api-key-input {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 12px;
+      color: var(--text);
+      width: 100%;
+      font-family: monospace;
+      outline: none;
+    }
+    .api-key-input:focus { border-color: var(--lime); }
+    .api-key-input::placeholder { color: var(--text-muted); }
+
+    .clear-btn {
+      margin-top: 8px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .clear-btn:hover { border-color: var(--text-muted); color: var(--text); }
+
+    /* ── MAIN CHAT ── */
+    .chat-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .chat-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+    .chat-header .ch-icon { font-size: 16px; color: var(--text-muted); }
+    .chat-header .ch-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .chat-header .ch-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-left: 4px;
+    }
+    .chat-header .ch-divider {
+      color: var(--border);
+      margin: 0 4px;
+    }
+
+    /* ── MESSAGES ── */
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      scroll-behavior: smooth;
+    }
+    .messages::-webkit-scrollbar { width: 6px; }
+    .messages::-webkit-scrollbar-track { background: transparent; }
+    .messages::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 3px; }
+
+    /* Welcome message */
+    .welcome {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+    .welcome .welcome-emoji { font-size: 36px; margin-bottom: 12px; }
+    .welcome .welcome-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .welcome .welcome-desc { font-size: 14px; line-height: 1.6; max-width: 400px; margin: 0 auto; }
+    .welcome .welcome-hints {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hint-chip {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--text);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s;
+    }
+    .hint-chip:hover { border-color: var(--lime); background: rgba(82,183,136,0.08); }
+    .hint-chip .hint-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--lime);
+      display: block;
+      margin-bottom: 3px;
+      font-weight: 600;
+    }
+
+    /* Message groups */
+    .msg-group {
+      display: flex;
+      gap: 12px;
+      padding: 6px 0;
+      align-items: flex-start;
+    }
+    .msg-group.user-group {
+      flex-direction: row-reverse;
+    }
+
+    .msg-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .msg-avatar.user-avatar {
+      background: #1F4E3D;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--lime);
+    }
+
+    .msg-body { flex: 1; min-width: 0; max-width: 75%; }
+    .user-group .msg-body { align-items: flex-end; display: flex; flex-direction: column; }
+
+    .msg-meta {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .user-group .msg-meta { flex-direction: row-reverse; }
+
+    .msg-name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .msg-time {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .msg-role-badge {
+      font-size: 10px;
+      padding: 1px 7px;
+      border-radius: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .msg-bubble {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      border-top-left-radius: 4px;
+      padding: 12px 16px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-width: 100%;
+    }
+    .user-group .msg-bubble {
+      background: var(--user-bg);
+      border-color: rgba(82,183,136,0.3);
+      border-top-left-radius: 12px;
+      border-top-right-radius: 4px;
+      color: var(--user-text);
+    }
+
+    /* Code blocks in messages */
+    .msg-bubble pre {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      overflow-x: auto;
+      margin: 8px 0;
+      font-size: 12px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+    .msg-bubble code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      background: rgba(255,255,255,0.08);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .msg-bubble pre code { background: none; padding: 0; }
+
+    /* Bold, italic in messages */
+    .msg-bubble strong { font-weight: 600; }
+    .msg-bubble em { font-style: italic; }
+
+    /* Typing indicator */
+    .typing-indicator {
+      display: flex;
+      gap: 12px;
+      padding: 6px 0;
+      align-items: flex-start;
+    }
+    .typing-bubble {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      border-top-left-radius: 4px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .typing-dot-anim {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      animation: typing-bounce 1.2s infinite;
+    }
+    .typing-dot-anim:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot-anim:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing-bounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+      30% { transform: translateY(-4px); opacity: 1; }
+    }
+
+    /* ── INPUT AREA ── */
+    .input-area {
+      padding: 16px 24px 20px;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+    .input-wrapper {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      align-items: flex-end;
+      gap: 0;
+      transition: border-color 0.15s;
+    }
+    .input-wrapper:focus-within { border-color: var(--lime); }
+
+    .msg-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 13px 16px;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      resize: none;
+      max-height: 160px;
+      min-height: 46px;
+      font-family: inherit;
+      line-height: 1.5;
+    }
+    .msg-input::placeholder { color: var(--text-muted); }
+
+    .send-btn {
+      background: var(--lime);
+      border: none;
+      border-radius: 0 9px 9px 0;
+      padding: 0 18px;
+      height: 46px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+      flex-shrink: 0;
+      align-self: flex-end;
+    }
+    .send-btn:hover { background: #3FA070; }
+    .send-btn:disabled { background: var(--border); cursor: not-allowed; }
+    .send-btn svg { width: 18px; height: 18px; fill: white; }
+
+    .input-hint {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+      padding: 0 4px;
+    }
+
+    /* ── ROUTING INDICATOR ── */
+    .routing-bar {
+      padding: 8px 24px;
+      background: rgba(82,183,136,0.08);
+      border-top: 1px solid rgba(82,183,136,0.2);
+      font-size: 12px;
+      color: var(--lime);
+      display: none;
+    }
+    .routing-bar.visible { display: block; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .sidebar { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="brand">TerraSYNC</div>
+    <div class="brand-sub">Autonomous Grounds Intelligence</div>
+  </div>
+
+  <div class="channel-label">Channel</div>
+  <div class="channel-item"><span>#</span>all-agents</div>
+
+  <div class="agents-label">
+    <span>Agents</span>
+    <span class="count" id="agent-count">8 online</span>
+  </div>
+
+  <div id="agent-list">
+    <!-- populated by JS -->
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="api-key-group">
+      <div class="api-key-label">Anthropic API Key</div>
+      <input
+        type="password"
+        class="api-key-input"
+        id="api-key"
+        placeholder="sk-ant-..."
+        autocomplete="off"
+      />
+    </div>
+    <button class="clear-btn" id="clear-btn">Clear conversation</button>
+  </div>
+</aside>
+
+<!-- MAIN CHAT -->
+<div class="chat-main">
+  <div class="chat-header">
+    <span class="ch-icon">#</span>
+    <span class="ch-name">all-agents</span>
+    <span class="ch-divider">|</span>
+    <span class="ch-desc">TerraSYNC social media team</span>
+  </div>
+
+  <div class="messages" id="messages">
+    <div class="welcome" id="welcome">
+      <div class="welcome-emoji">🌿</div>
+      <div class="welcome-title">Welcome to the team channel.</div>
+      <div class="welcome-desc">
+        Your agents are ready. Ask them to research trends, build a content plan,
+        write drafts, or @mention a specific agent to talk to them directly.
+        Add your Anthropic API key in the sidebar to get started.
+      </div>
+      <div class="welcome-hints">
+        <div class="hint-chip" onclick="useHint(this)">
+          <span class="hint-label">Research</span>
+          Lily and Tracy — what are the top content signals this week for a commercial grounds maintenance brand?
+        </div>
+        <div class="hint-chip" onclick="useHint(this)">
+          <span class="hint-label">Content</span>
+          Barney, write me a LinkedIn post about the ROI of switching from a traditional crew to autonomous mowing. Make it legendary.
+        </div>
+        <div class="hint-chip" onclick="useHint(this)">
+          <span class="hint-label">Review</span>
+          Robin, review this: "We're thrilled to announce our game-changing revolutionary robotic mowing solutions that will disrupt the industry."
+        </div>
+        <div class="hint-chip" onclick="useHint(this)">
+          <span class="hint-label">Full pipeline</span>
+          Ted, suit up. I need a 3-post Instagram plan for Earth Day. Run the full pipeline.
+        </div>
+        <div class="hint-chip" onclick="useHint(this)">
+          <span class="hint-label">Strategy</span>
+          What's the best hook pattern for reaching golf course superintendents on LinkedIn right now?
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="routing-bar" id="routing-bar">
+    Routing message to agents...
+  </div>
+
+  <div class="input-area">
+    <div class="input-wrapper">
+      <textarea
+        id="msg-input"
+        class="msg-input"
+        placeholder="Message the team... (@Barney, @Robin, @Ted...)"
+        rows="1"
+      ></textarea>
+      <button class="send-btn" id="send-btn" disabled>
+        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+      </button>
+    </div>
+    <div class="input-hint">
+      @mention an agent directly · Enter to send · Shift+Enter for new line
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ────────────────────────────────────────────────────────────────────
+let agents = [];
+let typingAgents = new Set();
+let isStreaming = false;
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+async function init() {
+  const res = await fetch('/api/agents');
+  agents = await res.json();
+  renderSidebar();
+
+  const savedKey = sessionStorage.getItem('ts_api_key');
+  if (savedKey) document.getElementById('api-key').value = savedKey;
+
+  document.getElementById('api-key').addEventListener('input', e => {
+    sessionStorage.setItem('ts_api_key', e.target.value);
+    updateSendBtn();
+  });
+
+  updateSendBtn();
+}
+
+function renderSidebar() {
+  const list = document.getElementById('agent-list');
+  list.innerHTML = agents.map(a => `
+    <div class="agent-item" id="sidebar-agent-${a.id}">
+      <div class="agent-avatar" style="background: ${a.color}22; color: ${a.color}" id="avatar-${a.id}">
+        ${a.emoji}
+        <div class="status-dot" id="dot-${a.id}"></div>
+      </div>
+      <div class="agent-info">
+        <div class="agent-name">${a.name}</div>
+        <div class="agent-role" id="role-label-${a.id}">${a.role}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateSendBtn() {
+  const key = document.getElementById('api-key').value.trim();
+  const input = document.getElementById('msg-input').value.trim();
+  document.getElementById('send-btn').disabled = !key || !input || isStreaming;
+}
+
+// ── HINT CHIPS ───────────────────────────────────────────────────────────────
+function useHint(el) {
+  const text = el.querySelector('.hint-label').nextSibling.textContent.trim();
+  const input = document.getElementById('msg-input');
+  input.value = text;
+  autoResize(input);
+  updateSendBtn();
+  input.focus();
+}
+
+// ── MESSAGE RENDERING ────────────────────────────────────────────────────────
+function getTime() {
+  return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function appendUserMessage(text) {
+  const welcome = document.getElementById('welcome');
+  if (welcome) welcome.remove();
+
+  const msgs = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.className = 'msg-group user-group';
+  el.innerHTML = `
+    <div class="msg-avatar user-avatar">Y</div>
+    <div class="msg-body">
+      <div class="msg-meta">
+        <span class="msg-name" style="color: var(--lime)">You</span>
+        <span class="msg-time">${getTime()}</span>
+      </div>
+      <div class="msg-bubble">${escapeHtml(text)}</div>
+    </div>
+  `;
+  msgs.appendChild(el);
+  scrollToBottom();
+}
+
+function createAgentMessage(agent) {
+  const welcome = document.getElementById('welcome');
+  if (welcome) welcome.remove();
+
+  const msgs = document.getElementById('messages');
+
+  // Typing indicator
+  const typingEl = document.createElement('div');
+  typingEl.className = 'typing-indicator';
+  typingEl.id = `typing-${agent.id}`;
+  typingEl.innerHTML = `
+    <div class="msg-avatar" style="background: ${agent.color}22; color: ${agent.color}">${agent.emoji}</div>
+    <div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;">${agent.name} <span style="color:${agent.color};font-size:10px;text-transform:uppercase;letter-spacing:0.5px;margin-left:4px;">${agent.role}</span></div>
+      <div class="typing-bubble">
+        <div class="typing-dot-anim"></div>
+        <div class="typing-dot-anim"></div>
+        <div class="typing-dot-anim"></div>
+      </div>
+    </div>
+  `;
+  msgs.appendChild(typingEl);
+  scrollToBottom();
+
+  return typingEl;
+}
+
+function replaceTypingWithMessage(typingEl, agent, text) {
+  const msgs = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.className = 'msg-group';
+  el.innerHTML = `
+    <div class="msg-avatar" style="background: ${agent.color}22; color: ${agent.color}">${agent.emoji}</div>
+    <div class="msg-body">
+      <div class="msg-meta">
+        <span class="msg-name" style="color: ${agent.color}">${agent.name}</span>
+        <span class="msg-role-badge" style="background:${agent.color}22;color:${agent.color}">${agent.role}</span>
+        <span class="msg-time">${getTime()}</span>
+      </div>
+      <div class="msg-bubble" id="bubble-${agent.id}-${Date.now()}">${renderMarkdown(text)}</div>
+    </div>
+  `;
+  msgs.replaceChild(el, typingEl);
+  scrollToBottom();
+  return el;
+}
+
+// Simple markdown renderer for message bubbles
+function renderMarkdown(text) {
+  // Escape HTML first
+  let html = escapeHtml(text);
+
+  // Code blocks (``` ```)
+  html = html.replace(/```([\s\S]*?)```/g, (_, code) =>
+    `<pre><code>${code.trim()}</code></pre>`
+  );
+
+  // Inline code
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+  // Bold
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/__(.+?)__/g, '<strong>$1</strong>');
+
+  // Italic
+  html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  html = html.replace(/_([^_]+)_/g, '<em>$1</em>');
+
+  // Preserve line breaks
+  html = html.replace(/\n/g, '<br>');
+
+  return html;
+}
+
+function escapeHtml(text) {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function scrollToBottom() {
+  const msgs = document.getElementById('messages');
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ── SIDEBAR STATE ────────────────────────────────────────────────────────────
+function setAgentTyping(agentId, isTyping) {
+  const dot = document.getElementById(`dot-${agentId}`);
+  const roleLabel = document.getElementById(`role-label-${agentId}`);
+  const sidebarItem = document.getElementById(`sidebar-agent-${agentId}`);
+  const agent = agents.find(a => a.id === agentId);
+
+  if (isTyping) {
+    typingAgents.add(agentId);
+    if (dot) { dot.className = 'status-dot typing-dot'; }
+    if (roleLabel) roleLabel.textContent = 'typing...';
+    if (sidebarItem) sidebarItem.classList.add('typing');
+  } else {
+    typingAgents.delete(agentId);
+    if (dot) { dot.className = 'status-dot'; }
+    if (roleLabel && agent) roleLabel.textContent = agent.role;
+    if (sidebarItem) sidebarItem.classList.remove('typing');
+  }
+}
+
+// ── SEND MESSAGE ─────────────────────────────────────────────────────────────
+async function sendMessage() {
+  const input = document.getElementById('msg-input');
+  const apiKey = document.getElementById('api-key').value.trim();
+  const message = input.value.trim();
+
+  if (!message || !apiKey || isStreaming) return;
+
+  isStreaming = true;
+  input.value = '';
+  autoResize(input);
+  updateSendBtn();
+
+  appendUserMessage(message);
+
+  const routingBar = document.getElementById('routing-bar');
+  routingBar.classList.add('visible');
+
+  // SSE streaming
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, apiKey })
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    appendErrorMessage(err.error || 'Something went wrong.');
+    isStreaming = false;
+    updateSendBtn();
+    routingBar.classList.remove('visible');
+    return;
+  }
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+
+  // Per-agent streaming state
+  const agentState = {};  // agentId → { typingEl, text, msgEl }
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop();
+
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      let event;
+      try { event = JSON.parse(line.slice(6)); } catch { continue; }
+
+      if (event.type === 'routing') {
+        routingBar.textContent = 'Routing message to agents...';
+      }
+
+      if (event.type === 'agents_selected') {
+        routingBar.classList.remove('visible');
+      }
+
+      if (event.type === 'agent_start') {
+        const agent = agents.find(a => a.id === event.agentId);
+        if (!agent) continue;
+        setAgentTyping(event.agentId, true);
+        const typingEl = createAgentMessage(agent);
+        agentState[event.agentId] = { typingEl, text: '', msgEl: null };
+      }
+
+      if (event.type === 'token') {
+        const state = agentState[event.agentId];
+        if (!state) continue;
+
+        state.text += event.text;
+
+        // Replace typing indicator with live bubble on first token
+        if (!state.msgEl) {
+          const agent = agents.find(a => a.id === event.agentId);
+          state.msgEl = replaceTypingWithMessage(state.typingEl, agent, state.text);
+        } else {
+          // Update bubble content
+          const bubble = state.msgEl.querySelector('.msg-bubble');
+          if (bubble) bubble.innerHTML = renderMarkdown(state.text);
+          scrollToBottom();
+        }
+      }
+
+      if (event.type === 'agent_done') {
+        setAgentTyping(event.agentId, false);
+        // Final render pass to ensure markdown is clean
+        const state = agentState[event.agentId];
+        if (state?.msgEl) {
+          const bubble = state.msgEl.querySelector('.msg-bubble');
+          if (bubble) bubble.innerHTML = renderMarkdown(state.text);
+        }
+      }
+
+      if (event.type === 'error') {
+        appendErrorMessage(event.message);
+        routingBar.classList.remove('visible');
+      }
+
+      if (event.type === 'done') {
+        // Clean up any remaining typing states
+        for (const id of typingAgents) setAgentTyping(id, false);
+        typingAgents.clear();
+      }
+    }
+  }
+
+  isStreaming = false;
+  updateSendBtn();
+  routingBar.classList.remove('visible');
+}
+
+function appendErrorMessage(msg) {
+  const msgs = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.style.cssText = 'padding: 10px 16px; background: rgba(220,38,38,0.1); border: 1px solid rgba(220,38,38,0.3); border-radius: 8px; color: #FCA5A5; font-size: 13px; margin: 4px 0;';
+  el.textContent = '⚠️ ' + msg;
+  msgs.appendChild(el);
+  scrollToBottom();
+}
+
+// ── INPUT HANDLING ────────────────────────────────────────────────────────────
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('msg-input');
+
+  input.addEventListener('input', () => {
+    autoResize(input);
+    updateSendBtn();
+  });
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  document.getElementById('send-btn').addEventListener('click', sendMessage);
+
+  document.getElementById('clear-btn').addEventListener('click', async () => {
+    await fetch('/api/clear', { method: 'POST' });
+    const msgs = document.getElementById('messages');
+    msgs.innerHTML = `
+      <div class="welcome" id="welcome">
+        <div class="welcome-emoji">🌿</div>
+        <div class="welcome-title">Conversation cleared.</div>
+        <div class="welcome-desc">Fresh start. What do you need from the team?</div>
+      </div>
+    `;
+  });
+
+  init();
+});
+</script>
+</body>
+</html>
