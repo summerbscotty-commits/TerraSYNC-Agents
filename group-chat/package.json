@@ -1,0 +1,14 @@
+{
+  "name": "terrasync-group-chat",
+  "version": "1.0.0",
+  "description": "TerraSYNC agent group chat — talk to Lily, Tracy, Patrice, Ted, Barney, Robin, Marshall, and Wesley",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.40.0",
+    "express": "^4.18.2"
+  }
+}
